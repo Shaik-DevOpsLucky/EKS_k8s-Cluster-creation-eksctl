@@ -218,7 +218,10 @@ registry.k8s.io/autoscaling/cluster-autoscaler:v1.29.0
 ```
 # NOTE: ALWAYS CHECK AND find the latest Cluster Autoscaler version that matches your cluster’s Kubernetes major and minor version follow the below link.
 ---
+https://github.com/kubernetes/autoscaler/releases/tag/cluster-autoscaler-1.35.0
+
 https://github.com/kubernetes/autoscaler/releases?source=post_page-----4aab8c89f9a1---------------------------------------
+
 ----
 # ✅ Rule You Must Follow (Official Kubernetes Rule)
 
