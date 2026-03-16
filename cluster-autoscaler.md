@@ -223,6 +223,8 @@ https://github.com/kubernetes/autoscaler/releases/tag/cluster-autoscaler-1.35.0
 https://github.com/kubernetes/autoscaler/releases?source=post_page-----4aab8c89f9a1---------------------------------------
 
 ----
+# reference:
+https://katharharshal1.medium.com/kubernetes-cluster-autoscaling-ca-using-aws-eks-4aab8c89f9a1
 # ✅ Rule You Must Follow (Official Kubernetes Rule)
 
 > **Cluster Autoscaler version MUST match the Kubernetes minor version.**
