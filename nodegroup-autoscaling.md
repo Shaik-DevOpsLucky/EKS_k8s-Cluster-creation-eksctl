@@ -8,13 +8,13 @@ When you create an **EKS cluster using `eksctl`**, you can configure the **nodeg
 
 ```bash
 eksctl create cluster \
---name Shaik-Ecom-cluster \
---region us-east-1 \
+--name healthcare-app-cluster \
+--region ap-southeast-2 \
 --node-type t3.small \
 --nodes 2 \
 --nodes-min 1 \
 --nodes-max 4 \
---zones us-east-1a,us-east-1b
+--zones ap-southeast-2a,ap-southeast-2b
 ```
 
 ### Explanation
@@ -23,7 +23,7 @@ eksctl create cluster \
 * `--nodes-min 1` → Autoscaler minimum nodes
 * `--nodes-max 4` → Autoscaler maximum nodes
 * `--node-type t3.small` → Instance type
-* `--zones us-east-1a,us-east-1b` → Worker nodes distributed across AZs
+* `--zones ap-southeast-2a,ap-southeast-2b` → Worker nodes distributed across AZs
 
 ⚠️ Important: This only sets **Auto Scaling Group limits**.
 To actually **scale nodes automatically based on pod demand**, you must install **Kubernetes Cluster Autoscaler** in your **Amazon Elastic Kubernetes Service** cluster.
@@ -38,8 +38,8 @@ Create cluster **without nodegroup** and then create nodegroup separately.
 
 ```bash
 eksctl create cluster \
---name Shaik-Ecom-cluster \
---region us-east-1 \
+--name healthcare-app-cluster \
+--region ap-southeast-2 \
 --without-nodegroup
 ```
 
@@ -47,14 +47,14 @@ eksctl create cluster \
 
 ```bash
 eksctl create nodegroup \
---cluster Shaik-Ecom-cluster \
---region us-east-1 \
+--cluster healthcare-app-cluster \
+--region ap-southeast-2 \
 --name ecom-ng \
 --node-type t3.small \
 --nodes 2 \
 --nodes-min 1 \
 --nodes-max 5 \
---zones us-east-1a,us-east-1b
+--node zones ap-southeast-2a,ap-southeast-2b
 ```
 
 ---
@@ -62,7 +62,14 @@ eksctl create nodegroup \
 ## Verify Nodegroup
 
 ```bash
-eksctl get nodegroup --cluster Shaik-Ecom-cluster
+eksctl get nodegroup --cluster healthcare-app-cluster
+```
+```
+eksctl get nodegroup --cluster healthcare-app-cluster
+
+eksctl delete nodegroup --cluster healthcare-app-cluster --name healthcare-app-ng
+
+eksctl delete-cluster --name healthcare-app-cluster --region ap-southeast-2
 ```
 
 ---
