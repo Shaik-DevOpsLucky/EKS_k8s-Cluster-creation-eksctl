@@ -527,4 +527,9 @@ root@ip-10-0-8-83:~#
 kubectl create deployment autoscaler-test --image=nginx
 kubectl scale deployment autoscaler-test --replicas=20
 ```
+The autoscaling should work now
 
+# reference:
+```
+https://chatgpt.com/share/69b7e296-0188-800a-aabf-5c7ed18cd934
+```
