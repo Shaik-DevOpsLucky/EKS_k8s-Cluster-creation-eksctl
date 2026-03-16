@@ -521,4 +521,10 @@ root@ip-10-0-8-83:~#
 
 
 ---
+# Test
+
+```
+kubectl create deployment autoscaler-test --image=nginx
+kubectl scale deployment autoscaler-test --replicas=20
+```
 
