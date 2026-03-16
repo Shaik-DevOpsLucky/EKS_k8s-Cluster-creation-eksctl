@@ -194,8 +194,8 @@ spec:
     - --skip-nodes-with-local-storage=false
     - --expander=least-waste
     - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/<YOUR CLUSTER NAME>
-    - --balance-similar-node-groups
-    - --skip-nodes-with-system-pods=false
+**  - --balance-similar-node-groups
+    - --skip-nodes-with-system-pods=false**
 ```
 
 Save the file to apply the changes.
@@ -249,9 +249,10 @@ Meaning:
 # ✅ Correct Image for EKS 1.35
 
 Use:
+Can manually update or use the below command
 
 ```bash
-registry.k8s.io/autoscaling/cluster-autoscaler:v1.35.0
+**registry.k8s.io/autoscaling/cluster-autoscaler:v1.35.0**
 ```
 
 Update image:
@@ -261,8 +262,87 @@ kubectl -n kube-system set image deployment/cluster-autoscaler \
 cluster-autoscaler=registry.k8s.io/autoscaling/cluster-autoscaler:v1.35.0
 ```
 
+# Verify pods are running or not:
+```
+Your deployment **does NOT contain AWS region environment variables**, so the autoscaler cannot call AWS APIs. That’s why it is crashing.
+
+Your current container section looks like this:
+
+```yaml
+containers:
+- command:
+  - ./cluster-autoscaler
+  - --v=4
+  - --stderrthreshold=info
+  - --cloud-provider=aws
+```
+
+But it is **missing this**:
+
+```yaml
+env:
+- name: AWS_REGION
+  value: ap-southeast-2
+- name: AWS_DEFAULT_REGION
+  value: ap-southeast-2
+```
+
 ---
 
+# ✅ Fix it in 1 command (Best way)
+
+Instead of editing manually, run this **patch command**:
+
+```bash
+kubectl -n kube-system patch deployment cluster-autoscaler \
+--type='json' \
+-p='[{"op":"add","path":"/spec/template/spec/containers/0/env","value":[{"name":"AWS_REGION","value":"ap-southeast-2"},{"name":"AWS_DEFAULT_REGION","value":"ap-southeast-2"}]}]'
+```
+
+---
+
+# ✅ After running patch
+
+Restart the deployment:
+
+```bash
+kubectl -n kube-system rollout restart deployment cluster-autoscaler
+```
+
+---
+
+# ✅ Verify
+
+Check pod:
+
+```bash
+kubectl get pods -n kube-system | grep autoscaler
+```
+
+Expected:
+
+```
+cluster-autoscaler-xxxxx   1/1   Running
+```
+
+---
+
+# ✅ Verify logs
+
+```bash
+kubectl -n kube-system logs -f deployment/cluster-autoscaler
+```
+
+Now you should see something like:
+
+```
+Building aws cloud provider
+Regenerating instance to ASG map
+```
+
+No more **Missing Region error**.
+
+---
 # ✅ How to Verify Your Cluster Version
 
 ```bash
